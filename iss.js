@@ -21,7 +21,9 @@ const fetchMyIP = function(callback) {
       return;
     }
 
-    callback(null, body.ip);
+    ip = body.ip
+
+    callback(null, ip);
   });
 };
 
