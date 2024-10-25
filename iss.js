@@ -26,5 +26,23 @@ const fetchMyIP = function(callback) {
     callback(null, ip);
   });
 };
+const fetchCoordsByIP = function(ip, callback) {
+  // use request to fetch geolocation from IPWHOIS API
+  needle.get(`http://ipwho.is/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
 
-module.exports = { fetchMyIP };
+    if (!body.success) {
+      const message = `Success status was ${body.success}. Server message says: ${body.message} when fetching for IP ${body.ip}`;
+      callback(Error(message), null);
+      return;
+    }
+
+    const geolocation = { latitude: body.latitude, longitude: body.longitude };
+    callback(null, geolocation);
+  })
+}
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
